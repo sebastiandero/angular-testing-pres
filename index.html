@@ -286,7 +286,7 @@ req.flush('A', {headers: new HttpHeaders()});
                 <ul>
                     <li>Protractor</li>
                     <li>Page-object pattern</li>
-                    <li>Testing multiple components together, including the services</li>
+                    <li>Multiple components and services</li>
                 </ul>
                 <aside class="notes">
                     <ul>
@@ -298,7 +298,223 @@ req.flush('A', {headers: new HttpHeaders()});
             </section>
         </section>
         <section>
-            <h1>VIGO NG Testing</h1>
+            <section>
+                <h1>VIGO NG Testing</h1>
+            </section>
+            <section>
+                <h2>Motivation</h2>
+                <ul>
+                    <li>Cumbersome TestBed</li>
+                    <li>Big Tests</li>
+                    <li>Many dependencies</li>
+                    <li>Similar setups</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>Always was the same setup</li>
+                        <li>Alot of code for setup only</li>
+                        <li>Intimidating</li>
+                        <li>Inconsistent development</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Setup</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape>
+// these replace the TestBed.configureTestingModule(...) in beforeEach(() => {...
+setupServiceTestBuilder(Service);
+setupShallowTestBuilder(Component);
+setupIsolatedTestBuilder(Controller);
+
+//configurable
+setupShallowTestBuilder(Component, builder => builder
+    .withImports(SomeModule)
+    .withProviders(MyManager, GeschaeftsfallManager)
+    .withForms());
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>setup methods call the builder</li>
+                        <li>the builder include alot of default mocks and dependencies</li>
+                        <li>alot less code and less cognitive complexity</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>TestContext</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape>
+// these replace the TestBed.configureTestingModule(...) in beforeEach(() => {...})
+forServiceTestContext(context => ...);
+forShallowTestContext(context => ...);
+forIsolatedTestContext(context => ...);
+
+// zentity can be configured above aswell but this also exists
+// in here create ZEntities and save them to the "Store" (map in tests)
+setupZentityMock(mockService => ...)
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>contains zentityMock</li>
+                        <li>contains map with all mocks</li>
+                        <li>has method to get instance</li>
+                        <li>has component instance and fixture</li>
+                        <li>has test injector</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Testing Components</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape style="font-size: 0.5em !important; line-height: 1.2em !important;">
+describe('BeilagenHinzufuegenDialogComponent (Shallow Test)', () => {
+  let testContext: ShallowTestContext&lt;BeilagenHinzufuegenDialogComponent&gt;
+  let beilagenService: BeilagenService;
+
+  beforeEach(() => {
+    beilagenService = mock(BeilagenService);
+    when(beilagenService.getBeilagenArtEnum()).thenReturn(of([]));
+  });
+
+  setupShallowTestBuilder(BeilagenHinzufuegenDialogComponent, builder =>
+    builder
+      .withProviders({provide: BeilagenService, useValue: instance(beilagenService)}, GfServiceResponseManager)
+      .withDialog()
+  );
+
+  forShallowTestContext&lt;BeilagenHinzufuegenDialogComponent&gt;(context => (testContext = context));
+
+  setupZentityMock(mockService => {
+    const abc = new BasisGeschaeftsfallUI();
+    abc.bestandsystemId = '123';
+    mockService.setAtStore(abc);
+  });
+
+  it('should create', () => {
+    expect(testContext.component).toBeTruthy();
+  });
+});
+
+describe('BeilagenHinzufuegenDialogComponent (Isolated Test)', () => {
+  let comp: BeilagenHinzufuegenDialogComponent;
+  let beilagenService: BeilagenService;
+  let bezeichnungControl;
+  let testingContext: IsolatedTestContext;
+
+  setupIsolatedTestBuilder(builder => builder);
+
+  forIsolatedTestContext(context => {
+    beilagenService = mock(BeilagenService);
+
+    comp = new BeilagenHinzufuegenDialogComponent(
+      instance(mock(MatDialogRef)),
+      instance(mock(LoggerService)),
+      instance(beilagenService),
+      new GfServiceResponseManager(context.testInjector),
+      context.testInjector
+    );
+
+    bezeichnungControl = new FormControl();
+
+    comp.formGroup = new FormGroup({
+      beilagentyp: new FormControl(),
+      bezeichnung: bezeichnungControl
+    });
+    testingContext = context;
+  });
+
+  it('should save data', fakeAsync(() => {
+    comp.formGroup.setValue({
+      beilagentyp: {id: 'FREIE_EINGABE'},
+      bezeichnung: 'Meine Bezeichnung'
+    });
+    comp.file = instance(mock(File));
+
+    const responseUI = new BasisGeschaeftsfallRequestResponseUI();
+    responseUI.geschaeftsfallId = 'abc';
+    testingContext.zentityService.setAtStore(responseUI);
+
+    when(beilagenService.createBeilage(anything())).thenReturn(of({bezeichnung: 'Meine Bezeichnung'}));
+
+    comp.save();
+
+    tick();
+
+    verify(beilagenService.createBeilage(anything())).once();
+    const [beilage] = capture(beilagenService.createBeilage).last();
+
+    expect(beilage.art).toBe('FREIE_EINGABE');
+    expect(beilage.bezeichnung).toBe('Meine Bezeichnung');
+    expect(beilage.gfId).toBe('abc');
+  }));
+  //...
+});
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>shallow and isolated test in the same file, because of angular guidelines</li>
+                        <li>has test injector</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Testing Services</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape style="font-size: 0.5em !important; line-height: 1.2em !important;">
+describe('HttpMessagesService', () => {
+  let service: HttpMessagesService;
+  let messagingServiceMock: MessagingService;
+
+  beforeEach(() => {
+    messagingServiceMock = mock(MessagingService);
+  });
+
+  setupServiceTestBuilder(HttpMessagesService, builder =>
+    builder.withProviders(
+      {provide: MessagingService, useValue: instance(messagingServiceMock)},
+    )
+  );
+
+  forTestContext(context => {
+    service = context.getInstance(HttpMessagesService);
+  });
+
+  it('should create', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should check if meldung is fachlich', () => {
+    const fachlicheMeldung = (service as any).checkIfMsgIsFachlich({
+      id: 'gg',
+      text: 'bla',
+      schweregrad: 'ERROR',
+      marker: ['FACHLICHE_MELDUNG', 'TECHNISCHE_MELDUNG']
+    });
+    expect(fachlicheMeldung).toBe(true);
+
+    const fachlicheMeldung2 = (service as any).checkIfMsgIsFachlich({
+      id: 'gg',
+      text: 'bla',
+      schweregrad: 'ERROR',
+      marker: ['TECHNISCHE_MELDUNG', 'FACHLICHE_MELDUNG']
+    });
+    expect(fachlicheMeldung2).toBe(true);
+
+    const technischeMeldung = (service as any).checkIfMsgIsFachlich({
+      id: 'gg',
+      text: 'bla',
+      schweregrad: 'ERROR',
+      marker: ['TECHNISCHE_MELDUNG', 'sdsd']
+    });
+    expect(technischeMeldung).toBe(false);
+  });
+//...
+});
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>shallow and isolated test in the same file, because of angular guidelines</li>
+                        <li>has test injector</li>
+                    </ul>
+                </aside>
+            </section>
         </section>
     </div>
 </div>
