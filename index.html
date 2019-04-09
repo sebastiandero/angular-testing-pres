@@ -1,49 +1,122 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/solarized.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>Angular Testing in VIGO NG</h2>
+        </section>
+        <section>
+            <h2>Inhalt</h2>
+            <ul>
+                <li>Tools</li>
+                <li>Angular Testing</li>
+                <li>Testarten</li>
+                <li>VIGO NG Testing</li>
+            </ul>
+        </section>
+        <section>
+            <section>
+                <h1>Tools</h1>
+            </section>
+            <section>
+                <h2>Karma</h2>
+                <pre><code class="bash" data-line-numbers="6,1-6" data-trim data-noescape
+                           style="font-size: 0.6em !important;">
+                    09 04 2019 21:03:33.731:INFO [karma]: <span class="fragment">Karma v1.7.1 server started at http://0.0.0.0:9876/</span>
+                    09 04 2019 21:03:33.732:INFO [launcher]: <span class="fragment">Launching browser ChromeCustom with unlimited concurrency</span>
+                    09 04 2019 21:03:33.741:INFO [launcher]: <span class="fragment">Starting browser Chrome</span>
+                    09 04 2019 21:03:59.049:WARN [karma]: <span class="fragment">No captured browser, open http://localhost:9876/</span>
+                    09 04 2019 21:03:59.500:INFO [HeadlessChrome 73.0.3683 (Linux 0.0.0)]: <span class="fragment">Connected on socket ... with id 0</span>
+                    <span class="fragment">HeadlessChrome 73.0.3683 (Linux 0.0.0): Executed 81 of 424 SUCCESS (0 secs / 18.735 secs)</span>
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li> 1 Zeile: Karma server</li>
+                        <li> 2 Zeile: Karma startet einen browser als client</li>
+                        <li> 3 Zeile: Browser startet</li>
+                        <li> 4 Zeile: Browser capturing, debugging in chrome etc.</li>
+                        <li> 5 Zeile: Socket connection für server -> browser crosstalk</li>
+                        <li> 6 Zeile: Tests running</li>
+                    </ul>
+                    <ul>
+                        <li>Test Runner</li>
+                        <li>Debugging</li>
+                        <li>Browser und Plattform unabhängig</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Jasmine</h2>
+                <pre><code class="javascript" data-line-numbers="1-10" data-trim data-noescape style="font-size: 0.8em !important;">
+describe("a suite", () => {
+  it("should add 2 and 2 to 4", () => {
+    expect(2 + 2).toBe(4);
+  });
 
-		<script src="js/reveal.js"></script>
+  it("should concatenate strings", () => {
+    const a = 'someName';
+    expect(`this is my name: ${a}`).toBe('this is my name: someName');
+  });
+});
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Fast</li>
+                        <li>BDD for JavaScript</li>
+                        <li>Spying</li>
+                    </ul>
+                </aside>
+            </section>
+        </section>
+        <section>
+            <h2>Angular Testing</h2>
+        </section>
+        <section>
+            <h2>Testarten</h2>
+        </section>
+        <section>
+            <h2>VIGO NG Testing</h2>
+        </section>
+    </div>
+</div>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {src: 'plugin/highlight/highlight.js', async: true}
+        ]
+    });
+</script>
+</body>
 </html>
