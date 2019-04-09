@@ -148,8 +148,10 @@ console.log(foo.getBar(999));</code></pre>
                 <h1>Angular Testing</h1>
             </section>
             <section>
-                <h2><a href="https://angular.io/guide/testing#component-test-scenarios">TestBed & Testing Module</a></h2>
-                <pre><code class="javascript" data-line-numbers data-trim data-noescape style="font-size: 0.7em !important;">
+                <h2><a href="https://angular.io/guide/testing#component-test-scenarios">TestBed & Testing Module</a>
+                </h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.7em !important;">
 let component: BannerComponent;
 let fixture:   ComponentFixture&lt;BannerComponent&gt;;
 let h1:        HTMLElement;
@@ -164,7 +166,7 @@ beforeEach(() => {
   fixture = TestBed.createComponent(BannerComponent);
   component = fixture.componentInstance;
   h1 = fixture.nativeElement.querySelector('h1');
-});
+});+
                 </code></pre>
                 <aside class="notes">
                     <ul>
@@ -175,6 +177,28 @@ beforeEach(() => {
             </section>
             <section>
                 <h2>Http Client Testing Module</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.7em !important;">
+TestBed.configureTestingModule({
+    //...
+    imports: [HttpClientTestingModule]
+});
+                </code></pre>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.7em !important;">
+const req = controller.expectOne(`myBasePath/gfs/${beilage.gfId}/beilagen`);
+
+expect(req.request.method).toBe('POST');
+const body: FormData = req.request.body;
+expect(body.get('art')).toBe(beilage.art);
+//...
+req.flush('A', {headers: new HttpHeaders()});
+                </code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Can be used to make sure requests are correctly sent to be.</li>
+                    </ul>
+                </aside>
             </section>
             <section>
                 <h2>TestBed pros/cons</h2>
@@ -210,26 +234,71 @@ beforeEach(() => {
         </section>
         <section>
             <section>
-                <h1>Testarten</h1>
+                <h1><a href="https://vsavkin.com/three-ways-to-test-angular-2-components-dcea8e90bd8d">Types of
+                    Tests</a></h1>
             </section>
             <section>
                 <h2>Shallow Tests</h2>
+                <ul>
+                    <li>Shallow-render</li>
+                    <li>Template testing</li>
+                    <li>Component bootstrap testing</li>
+                    <li>NgOnInit template set-up testing</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>Shallow-render mit schema 'NO_ERRORS_SCHEMA'</li>
+                        <li>soll nicht die Controller Logik testen, sondern nur die template</li>
+                    </ul>
+                </aside>
             </section>
             <section>
                 <h2>Isolated Tests</h2>
+                <ul>
+                    <li>Controller testing</li>
+                    <li>Isolated from other units</li>
+                    <li>Mock every dependency (except ZEntity related things)</li>
+                    <li>No Angular bootstrap</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>real unit-test</li>
+                        <li>no testbed, no module</li>
+                    </ul>
+                </aside>
             </section>
             <section>
                 <h2>Service Tests</h2>
+                <ul>
+                    <li>Isolated from other units</li>
+                    <li>Mock every dependency (except ZEntity related things)</li>
+                    <li>TestBed vs non-TestBed tests</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>semi-real unit-test for services</li>
+                        <li>no testbed, no module</li>
+                    </ul>
+                </aside>
             </section>
             <section>
-                <h2>Integration Tests</h2>
-            </section>
-            <section>
-                <h2>E2E Tests</h2>
+                <h2>Integration/E2E Tests</h2>
+                <ul>
+                    <li>Protractor</li>
+                    <li>Page-object pattern</li>
+                    <li>Testing multiple components together, including the services</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>important for caching configuration issues, and wrong use of components, because shallow
+                            tests dont cover that.
+                        </li>
+                    </ul>
+                </aside>
             </section>
         </section>
         <section>
-            <h2>VIGO NG Testing</h2>
+            <h1>VIGO NG Testing</h1>
         </section>
     </div>
 </div>
