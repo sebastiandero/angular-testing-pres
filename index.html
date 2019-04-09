@@ -148,7 +148,24 @@ console.log(foo.getBar(999));</code></pre>
                 <h1>Angular Testing</h1>
             </section>
             <section>
-                <h2>TestBed & Testing Module</h2>
+                <h2><a href="https://angular.io/guide/testing#component-test-scenarios">TestBed & Testing Module</a></h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape style="font-size: 0.7em !important;">
+let component: BannerComponent;
+let fixture:   ComponentFixture&lt;BannerComponent&gt;;
+let h1:        HTMLElement;
+
+beforeEach(() => {
+  TestBed.configureTestingModule({
+    declarations: [BannerComponent],
+    providers: [],
+    imports: []
+  });
+
+  fixture = TestBed.createComponent(BannerComponent);
+  component = fixture.componentInstance;
+  h1 = fixture.nativeElement.querySelector('h1');
+});
+                </code></pre>
                 <aside class="notes">
                     <ul>
                         <li>Angular Modules for Testing</li>
