@@ -26,14 +26,14 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h2>Angular Testing in VIGO NG</h2>
+            <h1>Angular Testing in VIGO NG</h1>
         </section>
         <section>
             <h2>Inhalt</h2>
             <ul>
                 <li>Tools</li>
                 <li>Angular Testing</li>
-                <li>Testarten</li>
+                <li>Types of Tests</li>
                 <li>VIGO NG Testing</li>
             </ul>
         </section>
@@ -42,8 +42,9 @@
                 <h1>Tools</h1>
             </section>
             <section>
-                <h2>Karma</h2>
-                <pre><code class="bash" data-line-numbers="6,1-6" data-trim data-noescape
+                <h2><a href="https://karma-runner.github.io/latest/index.html">Karma</a></h2>
+
+                <pre><code class="bash" data-line-numbers data-trim data-noescape
                            style="font-size: 0.6em !important;">
                     09 04 2019 21:03:33.731:INFO [karma]: <span class="fragment">Karma v1.7.1 server started at http://0.0.0.0:9876/</span>
                     09 04 2019 21:03:33.732:INFO [launcher]: <span class="fragment">Launching browser ChromeCustom with unlimited concurrency</span>
@@ -69,8 +70,9 @@
                 </aside>
             </section>
             <section>
-                <h2>Jasmine</h2>
-                <pre><code class="javascript" data-line-numbers="1-10" data-trim data-noescape style="font-size: 0.8em !important;">
+                <h2><a href="https://jasmine.github.io/pages/getting_started.html">Jasmine</a></h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.8em !important;">
 describe("a suite", () => {
   it("should add 2 and 2 to 4", () => {
     expect(2 + 2).toBe(4);
@@ -90,12 +92,124 @@ describe("a suite", () => {
                     </ul>
                 </aside>
             </section>
+            <section>
+                <h2><a href="https://jasmine.github.io/api/3.3/matchers.html">Jasmine Matchers</a></h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape>
+// not.(other-matcher)
+expect(something).not.toBe(true);
+
+// equals
+expect(something).toBe(true);
+
+// equals float
+expect(something).toBeCloseTo(expected, precision);
+expect(number).toBeCloseTo(42.2, 3);
+
+//contains
+expect(array).toContain(anElement);
+
+//error
+expect(aFunction()).toThrow(anError);</code></pre>
+            </section>
+            <section>
+                <h2><a href="https://github.com/NagRock/ts-mockito">ts-mockito</a></h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape>
+// from ts-mockito docs:
+// Creating mock
+let mockedFoo:Foo = mock(Foo);
+
+// stub method before execution
+when(mockedFoo.getBar(3)).thenReturn('three');
+
+// Getting instance
+let foo:Foo = instance(mockedFoo);
+
+// prints three
+console.log(foo.getBar(3));
+
+// verify called
+verify(foo.getBar(3)).called();
+
+// prints null, because "getBar(999)" was not stubbed
+console.log(foo.getBar(999));</code></pre>
+                <aside class="notes">
+                    <ul>
+                        <li>When to stub methods doesnt matter</li>
+                        <li>pass instance to logic</li>
+                        <li>use mock to stub and verify</li>
+                        <li>can spy on real objects</li>
+                        <li>for java developers its basically the same, except for the instance</li>
+                    </ul>
+                </aside>
+            </section>
         </section>
         <section>
-            <h2>Angular Testing</h2>
+            <section>
+                <h1>Angular Testing</h1>
+            </section>
+            <section>
+                <h2>TestBed & Testing Module</h2>
+                <aside class="notes">
+                    <ul>
+                        <li>Angular Modules for Testing</li>
+                        <li>Bootstraps Angular</li>
+                    </ul>
+                </aside>
+            </section>
+            <section>
+                <h2>Http Client Testing Module</h2>
+            </section>
+            <section>
+                <h2>TestBed pros/cons</h2>
+                <p>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Positives</th>
+                        <th>Negatives</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>
+                            <ul style="font-size: 0.7em !important;">
+                                <li>Dependency injection</li>
+                                <li>Importing modules</li>
+                                <li>Mocking with injection</li>
+                                <li>Less code in tests</li>
+                                <li>Tests module configuration</li>
+                            </ul>
+                        </th>
+                        <th>
+                            <ul style="font-size: 0.7em !important;">
+                                <li>Performance</li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
+                </p>
+            </section>
         </section>
         <section>
-            <h2>Testarten</h2>
+            <section>
+                <h1>Testarten</h1>
+            </section>
+            <section>
+                <h2>Shallow Tests</h2>
+            </section>
+            <section>
+                <h2>Isolated Tests</h2>
+            </section>
+            <section>
+                <h2>Service Tests</h2>
+            </section>
+            <section>
+                <h2>Integration Tests</h2>
+            </section>
+            <section>
+                <h2>E2E Tests</h2>
+            </section>
         </section>
         <section>
             <h2>VIGO NG Testing</h2>
