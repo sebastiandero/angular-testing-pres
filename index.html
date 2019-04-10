@@ -231,6 +231,26 @@ req.flush('A', {headers: new HttpHeaders()});
                 </table>
                 </p>
             </section>
+            <section>
+                <h2>Tips</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.7em !important;">
+                    // dont use this
+                    inject([Token], (service) => ...)
+
+                    //use one of these (second for VIGO NG)
+                    const service = TestBed.get(Token)
+                    const service = context.getInstance(Token)
+
+                    //these are handy
+                    async(() => ...)
+                    fakeAsync(() => ...)
+                    tick()
+                    tick(milliseconds)
+                    flush()
+                    fixture.debugElement.query(By.css('mytag.withclass'));
+                </code></pre>
+            </section>
         </section>
         <section>
             <section>
