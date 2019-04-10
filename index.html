@@ -536,6 +536,36 @@ describe('HttpMessagesService', () => {
                 </aside>
             </section>
         </section>
+        <section>
+            <section>
+                <h1>Workshop</h1>
+            </section>
+            <section>
+                <h2>Workshop</h2>
+                <ul>
+                    <li>Vanilla and Isolated Test: beilagen-hinzufuegen-dialog.component.ts</li>
+                    <li>Shallow Test: anfrage-info.component.ts</li>
+                    <li>Service Test: http-messages.service.ts</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Vanilla and Isolated Test</h2>
+                <pre><code class="javascript" data-line-numbers data-trim data-noescape
+                           style="font-size: 0.7em !important;">
+                    TestBed.configureTestingModule({
+                    //...
+                    schemas: [NO_ERRORS_SCHEMA], // this is for shallow-rendering
+                    providers: {
+                        {provide: MAT_DIALOG_DATA, useValue: {}},
+                        {provide: MatDialogRef, useValue: &lt;the-mock-instance&gt;}
+                        {provide: ZEntityNgrxService, useValue: &lt;instance of ZEntityNgrxServiceMock&gt;}
+                    }
+                    //...
+                    })
+                </code></pre>
+            </section>
+        </section>
     </div>
 </div>
 
